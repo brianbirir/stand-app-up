@@ -39,7 +39,7 @@ services:
     expose:
       - "8000"
     environment:
-      - DEBUG=0
+      - DEBUG=1
       - DB_NAME=standapp_db
       - DB_USER=standapp_user
       - DB_PASSWORD=standapp_password
