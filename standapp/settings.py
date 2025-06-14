@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'django_celery_beat',
+    'authentication',
+    'teams',
+    'standups',
+    'slack_integration',
 ]
 
 MIDDLEWARE = [
@@ -183,3 +188,21 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+# Celery Configuration
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+# Slack Configuration
+SLACK_BOT_TOKEN = os.environ.get('SLACK_BOT_TOKEN')
+SLACK_SIGNING_SECRET = os.environ.get('SLACK_SIGNING_SECRET')
+SLACK_APP_TOKEN = os.environ.get('SLACK_APP_TOKEN')
+
+# Stand-up App Configuration
+STANDUP_REMINDER_TIME = os.environ.get('STANDUP_REMINDER_TIME', '09:00')
+STANDUP_END_TIME = os.environ.get('STANDUP_END_TIME', '16:00')
+STANDUP_FOLLOW_UP_INTERVAL = int(os.environ.get('STANDUP_FOLLOW_UP_INTERVAL', '60'))  # minutes

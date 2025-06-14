@@ -11,6 +11,11 @@ djangorestframework = "*"
 django-redis = "*"
 redis = "*"
 gunicorn = "*"
+slack-sdk = "*"
+celery = "*"
+django-celery-beat = "*"
+python-dotenv = "*"
+pytz = "*"
 
 [dev-packages]
 
