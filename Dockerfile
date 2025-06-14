@@ -28,8 +28,12 @@ RUN pipenv install --system --deploy
 # Copy project
 COPY . .
 
+# Copy and make entrypoint script executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Expose port 8000
 EXPOSE 8000
 
-# Command to run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Set the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
