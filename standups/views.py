@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Q, Count, Avg
 from datetime import timedelta
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
+from drf_spectacular.types import OpenApiTypes
 
 from .models import Standup, StandupResponse, StandupReminder, StandupMetrics
 from .serializers import (
@@ -16,6 +18,33 @@ from .serializers import (
 from teams.models import TeamMember
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="List all standups for the authenticated user's teams",
+        summary="List standups",
+        tags=["Standups"]
+    ),
+    create=extend_schema(
+        description="Create a new standup for a team",
+        summary="Create standup",
+        tags=["Standups"]
+    ),
+    retrieve=extend_schema(
+        description="Retrieve a specific standup",
+        summary="Get standup",
+        tags=["Standups"]
+    ),
+    update=extend_schema(
+        description="Update a standup",
+        summary="Update standup",
+        tags=["Standups"]
+    ),
+    destroy=extend_schema(
+        description="Delete a standup",
+        summary="Delete standup",
+        tags=["Standups"]
+    ),
+)
 class StandupViewSet(viewsets.ModelViewSet):
     """API viewset for managing standups"""
     queryset = Standup.objects.all()
@@ -34,6 +63,12 @@ class StandupViewSet(viewsets.ModelViewSet):
             team__teammember__is_active=True
         ).distinct().order_by('-date')
 
+    @extend_schema(
+        description="Get all responses for a specific standup",
+        summary="Get standup responses",
+        responses=StandupResponseSerializer(many=True),
+        tags=["Standups"]
+    )
     @action(detail=True, methods=['get'])
     def responses(self, request, pk=None):
         """Get responses for a standup"""
@@ -42,6 +77,11 @@ class StandupViewSet(viewsets.ModelViewSet):
         serializer = StandupResponseSerializer(responses, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        description="Get team members who haven't submitted standup responses",
+        summary="Get missing members",
+        tags=["Standups"]
+    )
     @action(detail=True, methods=['get'])
     def missing_members(self, request, pk=None):
         """Get team members who haven't submitted responses"""

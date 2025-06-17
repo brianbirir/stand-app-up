@@ -16,6 +16,7 @@ celery = "*"
 django-celery-beat = "*"
 python-dotenv = "*"
 pytz = "*"
+drf-spectacular = "*"
 
 [dev-packages]
 

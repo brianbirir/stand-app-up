@@ -1,0 +1,1520 @@
+openapi: 3.0.3
+info:
+  title: Stand-up App API
+  version: 1.0.0
+  description: API for managing team stand-ups and Slack integration
+paths:
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: Handle user login
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      description: Handle user logout
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/user/:
+    get:
+      operationId: auth_user_retrieve
+      description: Get current user profile
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: auth_user_update
+      description: Update user profile
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/standups/dashboard/:
+    get:
+      operationId: standups_dashboard_retrieve
+      description: Dashboard view with user and team statistics
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/standups/metrics/:
+    get:
+      operationId: standups_metrics_list
+      description: API viewset for viewing standup metrics
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StandupMetrics'
+          description: ''
+  /api/standups/metrics/{id}/:
+    get:
+      operationId: standups_metrics_retrieve
+      description: API viewset for viewing standup metrics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup metrics.
+        required: true
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupMetrics'
+          description: ''
+  /api/standups/metrics/team_summary/:
+    get:
+      operationId: standups_metrics_team_summary_retrieve
+      description: Get metrics summary for user's teams
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupMetrics'
+          description: ''
+  /api/standups/responses/:
+    get:
+      operationId: standups_responses_list
+      description: API viewset for managing standup responses
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StandupResponse'
+          description: ''
+    post:
+      operationId: standups_responses_create
+      description: API viewset for managing standup responses
+      tags:
+      - standups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandupResponseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StandupResponseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StandupResponseRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupResponse'
+          description: ''
+  /api/standups/responses/{id}/:
+    get:
+      operationId: standups_responses_retrieve
+      description: API viewset for managing standup responses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup response.
+        required: true
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupResponse'
+          description: ''
+    put:
+      operationId: standups_responses_update
+      description: API viewset for managing standup responses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup response.
+        required: true
+      tags:
+      - standups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandupResponseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StandupResponseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StandupResponseRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupResponse'
+          description: ''
+    patch:
+      operationId: standups_responses_partial_update
+      description: API viewset for managing standup responses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup response.
+        required: true
+      tags:
+      - standups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupResponseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupResponseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupResponseRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupResponse'
+          description: ''
+    delete:
+      operationId: standups_responses_destroy
+      description: API viewset for managing standup responses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup response.
+        required: true
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/standups/standups/:
+    get:
+      operationId: standups_standups_list
+      description: API viewset for managing standups
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Standup'
+          description: ''
+    post:
+      operationId: standups_standups_create
+      description: API viewset for managing standups
+      tags:
+      - standups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standup'
+          description: ''
+  /api/standups/standups/{id}/:
+    get:
+      operationId: standups_standups_retrieve
+      description: API viewset for managing standups
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup.
+        required: true
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standup'
+          description: ''
+    put:
+      operationId: standups_standups_update
+      description: API viewset for managing standups
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup.
+        required: true
+      tags:
+      - standups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standup'
+          description: ''
+    patch:
+      operationId: standups_standups_partial_update
+      description: API viewset for managing standups
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup.
+        required: true
+      tags:
+      - standups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standup'
+          description: ''
+    delete:
+      operationId: standups_standups_destroy
+      description: API viewset for managing standups
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup.
+        required: true
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/standups/standups/{id}/end_standup/:
+    post:
+      operationId: standups_standups_end_standup_create
+      description: Manually end a standup
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup.
+        required: true
+      tags:
+      - standups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StandupRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standup'
+          description: ''
+  /api/standups/standups/{id}/missing_members/:
+    get:
+      operationId: standups_standups_missing_members_retrieve
+      description: Get team members who haven't submitted responses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup.
+        required: true
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standup'
+          description: ''
+  /api/standups/standups/{id}/responses/:
+    get:
+      operationId: standups_standups_responses_retrieve
+      description: Get responses for a standup
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup.
+        required: true
+      tags:
+      - standups
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standup'
+          description: ''
+  /api/teams/members/:
+    get:
+      operationId: teams_members_list
+      description: API viewset for managing team members
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamMember'
+          description: ''
+    post:
+      operationId: teams_members_create
+      description: API viewset for managing team members
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamMemberRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+          description: ''
+  /api/teams/members/{id}/:
+    get:
+      operationId: teams_members_retrieve
+      description: API viewset for managing team members
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+          description: ''
+    put:
+      operationId: teams_members_update
+      description: API viewset for managing team members
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamMemberRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+          description: ''
+    patch:
+      operationId: teams_members_partial_update
+      description: API viewset for managing team members
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamMemberRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+          description: ''
+    delete:
+      operationId: teams_members_destroy
+      description: API viewset for managing team members
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/teams/schedules/:
+    get:
+      operationId: teams_schedules_list
+      description: API viewset for managing standup schedules
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StandupSchedule'
+          description: ''
+    post:
+      operationId: teams_schedules_create
+      description: API viewset for managing standup schedules
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandupScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StandupScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StandupScheduleRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupSchedule'
+          description: ''
+  /api/teams/schedules/{id}/:
+    get:
+      operationId: teams_schedules_retrieve
+      description: API viewset for managing standup schedules
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup schedule.
+        required: true
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupSchedule'
+          description: ''
+    put:
+      operationId: teams_schedules_update
+      description: API viewset for managing standup schedules
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup schedule.
+        required: true
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandupScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StandupScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StandupScheduleRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupSchedule'
+          description: ''
+    patch:
+      operationId: teams_schedules_partial_update
+      description: API viewset for managing standup schedules
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup schedule.
+        required: true
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedStandupScheduleRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandupSchedule'
+          description: ''
+    delete:
+      operationId: teams_schedules_destroy
+      description: API viewset for managing standup schedules
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this standup schedule.
+        required: true
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/teams/teams/:
+    get:
+      operationId: teams_teams_list
+      description: API viewset for managing teams
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+          description: ''
+    post:
+      operationId: teams_teams_create
+      description: API viewset for managing teams
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+  /api/teams/teams/{id}/:
+    get:
+      operationId: teams_teams_retrieve
+      description: API viewset for managing teams
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team.
+        required: true
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+    put:
+      operationId: teams_teams_update
+      description: API viewset for managing teams
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team.
+        required: true
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+    patch:
+      operationId: teams_teams_partial_update
+      description: API viewset for managing teams
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team.
+        required: true
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+    delete:
+      operationId: teams_teams_destroy
+      description: API viewset for managing teams
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team.
+        required: true
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/teams/teams/{id}/add_member/:
+    post:
+      operationId: teams_teams_add_member_create
+      description: Add a member to the team
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team.
+        required: true
+      tags:
+      - teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+  /api/teams/teams/{id}/members/:
+    get:
+      operationId: teams_teams_members_retrieve
+      description: Get team members
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team.
+        required: true
+      tags:
+      - teams
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+components:
+  schemas:
+    MoodEnum:
+      enum:
+      - great
+      - good
+      - okay
+      - stressed
+      - blocked
+      type: string
+      description: |-
+        * `great` - 😄 Great
+        * `good` - 😊 Good
+        * `okay` - 😐 Okay
+        * `stressed` - 😰 Stressed
+        * `blocked` - 😤 Blocked
+    PatchedStandupRequest:
+      type: object
+      description: Serializer for Standup model
+      properties:
+        date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+    PatchedStandupResponseRequest:
+      type: object
+      description: Serializer for StandupResponse model
+      properties:
+        standup:
+          type: integer
+        yesterday_work:
+          type: string
+          minLength: 1
+          description: What did you work on yesterday?
+        today_work:
+          type: string
+          minLength: 1
+          description: What will you work on today?
+        blockers:
+          type: string
+          description: Are there any blockers or impediments?
+        mood:
+          $ref: '#/components/schemas/MoodEnum'
+    PatchedStandupScheduleRequest:
+      type: object
+      description: Serializer for StandupSchedule model
+      properties:
+        team:
+          type: integer
+        weekdays: {}
+        reminder_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 50
+        is_active:
+          type: boolean
+    PatchedTeamMemberRequest:
+      type: object
+      description: Serializer for TeamMember model
+      properties:
+        team:
+          type: integer
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        slack_user_id:
+          type: string
+          minLength: 1
+          pattern: ^U[A-Z0-9]{8,}$
+          maxLength: 50
+        is_active:
+          type: boolean
+    PatchedTeamRequest:
+      type: object
+      description: Serializer for Team model
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+        slack_channel_id:
+          type: string
+          minLength: 1
+          pattern: ^C[A-Z0-9]{8,}$
+          maxLength: 50
+        is_active:
+          type: boolean
+    RoleEnum:
+      enum:
+      - member
+      - lead
+      - admin
+      type: string
+      description: |-
+        * `member` - Member
+        * `lead` - Team Lead
+        * `admin` - Admin
+    Standup:
+      type: object
+      description: Serializer for Standup model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        team:
+          allOf:
+          - $ref: '#/components/schemas/Team'
+          readOnly: true
+        date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+        completion_rate:
+          type: string
+          readOnly: true
+        response_count:
+          type: string
+          readOnly: true
+        missing_count:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - completion_rate
+      - created_at
+      - date
+      - id
+      - missing_count
+      - response_count
+      - team
+    StandupMetrics:
+      type: object
+      description: Serializer for StandupMetrics model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        team:
+          allOf:
+          - $ref: '#/components/schemas/Team'
+          readOnly: true
+        date:
+          type: string
+          format: date
+        total_members:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        responses_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        completion_rate:
+          type: number
+          format: double
+        average_response_time:
+          type: string
+          nullable: true
+        first_response_time:
+          type: string
+          format: time
+          nullable: true
+        last_response_time:
+          type: string
+          format: time
+          nullable: true
+        mood_distribution: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - completion_rate
+      - created_at
+      - date
+      - id
+      - responses_count
+      - team
+      - total_members
+    StandupRequest:
+      type: object
+      description: Serializer for Standup model
+      properties:
+        date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - date
+    StandupResponse:
+      type: object
+      description: Serializer for StandupResponse model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        standup:
+          type: integer
+        standup_info:
+          type: string
+          readOnly: true
+        yesterday_work:
+          type: string
+          description: What did you work on yesterday?
+        today_work:
+          type: string
+          description: What will you work on today?
+        blockers:
+          type: string
+          description: Are there any blockers or impediments?
+        mood:
+          $ref: '#/components/schemas/MoodEnum'
+        submitted_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - standup
+      - standup_info
+      - submitted_at
+      - today_work
+      - updated_at
+      - user
+      - yesterday_work
+    StandupResponseRequest:
+      type: object
+      description: Serializer for StandupResponse model
+      properties:
+        standup:
+          type: integer
+        yesterday_work:
+          type: string
+          minLength: 1
+          description: What did you work on yesterday?
+        today_work:
+          type: string
+          minLength: 1
+          description: What will you work on today?
+        blockers:
+          type: string
+          description: Are there any blockers or impediments?
+        mood:
+          $ref: '#/components/schemas/MoodEnum'
+      required:
+      - standup
+      - today_work
+      - yesterday_work
+    StandupSchedule:
+      type: object
+      description: Serializer for StandupSchedule model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        team:
+          type: integer
+        team_name:
+          type: string
+          readOnly: true
+        weekdays: {}
+        weekday_names:
+          type: string
+          readOnly: true
+        reminder_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        timezone:
+          type: string
+          maxLength: 50
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - end_time
+      - id
+      - reminder_time
+      - team
+      - team_name
+      - weekday_names
+    StandupScheduleRequest:
+      type: object
+      description: Serializer for StandupSchedule model
+      properties:
+        team:
+          type: integer
+        weekdays: {}
+        reminder_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 50
+        is_active:
+          type: boolean
+      required:
+      - end_time
+      - reminder_time
+      - team
+    StatusEnum:
+      enum:
+      - pending
+      - in_progress
+      - completed
+      - cancelled
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `in_progress` - In Progress
+        * `completed` - Completed
+        * `cancelled` - Cancelled
+    Team:
+      type: object
+      description: Serializer for Team model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        slack_channel_id:
+          type: string
+          pattern: ^C[A-Z0-9]{8,}$
+          maxLength: 50
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        member_count:
+          type: string
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - member_count
+      - name
+      - slack_channel_id
+      - updated_at
+    TeamMember:
+      type: object
+      description: Serializer for TeamMember model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        team:
+          type: integer
+        team_name:
+          type: string
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        slack_user_id:
+          type: string
+          pattern: ^U[A-Z0-9]{8,}$
+          maxLength: 50
+        is_active:
+          type: boolean
+        joined_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - joined_at
+      - slack_user_id
+      - team
+      - team_name
+      - user
+    TeamMemberRequest:
+      type: object
+      description: Serializer for TeamMember model
+      properties:
+        team:
+          type: integer
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        slack_user_id:
+          type: string
+          minLength: 1
+          pattern: ^U[A-Z0-9]{8,}$
+          maxLength: 50
+        is_active:
+          type: boolean
+      required:
+      - slack_user_id
+      - team
+    TeamRequest:
+      type: object
+      description: Serializer for Team model
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+        slack_channel_id:
+          type: string
+          minLength: 1
+          pattern: ^C[A-Z0-9]{8,}$
+          maxLength: 50
+        is_active:
+          type: boolean
+      required:
+      - name
+      - slack_channel_id
+    User:
+      type: object
+      description: Serializer for User model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        full_name:
+          type: string
+          readOnly: true
+      required:
+      - full_name
+      - id
+      - username
+    UserRequest:
+      type: object
+      description: Serializer for User model
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
