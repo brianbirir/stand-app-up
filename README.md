@@ -15,6 +15,7 @@ A comprehensive Django-based application for managing daily stand-ups with Slack
 ## Architecture
 
 ### Backend Components
+
 - **Django**: Web framework and API
 - **PostgreSQL**: Primary database
 - **Redis**: Caching and message broker
@@ -22,6 +23,7 @@ A comprehensive Django-based application for managing daily stand-ups with Slack
 - **Slack SDK**: Slack bot integration
 
 ### Key Apps
+
 - **authentication**: User login/logout and profile management
 - **teams**: Team and member management with schedules
 - **standups**: Stand-up sessions, responses, and metrics
@@ -30,6 +32,7 @@ A comprehensive Django-based application for managing daily stand-ups with Slack
 ## Quick Start
 
 ### Prerequisites
+
 - Python 3.12+
 - Docker and Docker Compose
 - Pipenv (for dependency management)
@@ -37,42 +40,50 @@ A comprehensive Django-based application for managing daily stand-ups with Slack
 ### Installation
 
 1. **Clone and navigate to the project**:
+
 ```bash
 cd /path/to/stand-app-up
 ```
 
 2. **Install dependencies**:
+
 ```bash
 pipenv install
 pipenv shell
 ```
 
 3. **Start database services**:
+
 ```bash
 docker-compose up -d db redis
 ```
 
 4. **Run database migrations**:
+
 ```bash
 python manage.py migrate
 ```
 
 5. **Create a superuser**:
+
 ```bash
 python manage.py createsuperuser
 ```
 
 6. **Start the development server**:
+
 ```bash
 python manage.py runserver
 ```
 
 7. **Start Celery worker (in another terminal)**:
+
 ```bash
 celery -A standapp worker -l info
 ```
 
 8. **Start Celery beat scheduler (in another terminal)**:
+
 ```bash
 celery -A standapp beat -l info
 ```
@@ -135,23 +146,27 @@ ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login/` - User login
 - `POST /api/auth/logout/` - User logout
 - `GET /api/auth/user/` - Get current user profile
 
 ### Teams
+
 - `GET /api/teams/teams/` - List teams
 - `POST /api/teams/teams/` - Create team
 - `GET /api/teams/teams/{id}/members/` - Get team members
 - `POST /api/teams/teams/{id}/add_member/` - Add team member
 
 ### Stand-ups
+
 - `GET /api/standups/standups/` - List stand-ups
 - `GET /api/standups/standups/{id}/responses/` - Get stand-up responses
 - `POST /api/standups/responses/` - Submit stand-up response
 - `GET /api/standups/dashboard/` - Get dashboard data
 
 ### Metrics
+
 - `GET /api/standups/metrics/` - Get team metrics
 - `GET /api/standups/metrics/team_summary/` - Get team summaries
 
@@ -160,6 +175,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 ### Setting Up a Team
 
 1. **Create a Team**:
+
 ```bash
 curl -X POST http://localhost:8000/api/teams/teams/ \
   -H "Content-Type: application/json" \
@@ -171,6 +187,7 @@ curl -X POST http://localhost:8000/api/teams/teams/ \
 ```
 
 2. **Add Team Members**:
+
 ```bash
 curl -X POST http://localhost:8000/api/teams/teams/1/add_member/ \
   -H "Content-Type: application/json" \
@@ -182,6 +199,7 @@ curl -X POST http://localhost:8000/api/teams/teams/1/add_member/ \
 ```
 
 3. **Create Stand-up Schedule**:
+
 ```bash
 curl -X POST http://localhost:8000/api/teams/schedules/ \
   -H "Content-Type: application/json" \
@@ -205,7 +223,8 @@ curl -X POST http://localhost:8000/api/teams/schedules/ \
 ## Development
 
 ### Project Structure
-```
+
+```plaintext
 stand-app-up/
 ├── authentication/          # User authentication
 ├── teams/                  # Team management
@@ -239,16 +258,19 @@ stand-app-up/
 ### Production Setup
 
 1. **Use Docker Compose**:
+
 ```bash
 docker-compose up -d
 ```
 
 2. **Configure Environment**:
-   - Set `DEBUG=False`
-   - Use secure `SECRET_KEY`
-   - Configure proper `ALLOWED_HOSTS`
 
-3. **Set up SSL**:
+- Set `DEBUG=False`
+- Use secure `SECRET_KEY`
+- Configure proper `ALLOWED_HOSTS`
+
+3.**Set up SSL**:
+
    - Configure Nginx with SSL certificates
    - Update Slack app URLs to use HTTPS
 
@@ -277,6 +299,7 @@ docker-compose up -d
 ## Support
 
 For issues and questions:
+
 1. Check the logs: `docker-compose logs`
 2. Review Django admin interface at `/admin/`
 3. Use Django shell for debugging: `python manage.py shell`
