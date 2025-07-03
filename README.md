@@ -110,16 +110,13 @@ SLACK_BOT_TOKEN=xoxb-your-bot-token
 SLACK_SIGNING_SECRET=your-signing-secret
 SLACK_APP_TOKEN=xapp-your-app-token
 
-# Stand-up Configuration
-STANDUP_REMINDER_TIME=09:00
-STANDUP_END_TIME=16:00
-STANDUP_FOLLOW_UP_INTERVAL=60
-
 # Security
 SECRET_KEY=your-secret-key
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 ```
+
+> **Note**: Stand-up timing is configured per team through the web interface via the StandupSchedule model, not through environment variables. Each team can have its own reminder times, end times, and timezone settings.
 
 ### Slack Setup
 
@@ -269,14 +266,15 @@ docker-compose up -d
 - Use secure `SECRET_KEY`
 - Configure proper `ALLOWED_HOSTS`
 
-3.**Set up SSL**:
+3. **Set up SSL**:
 
-   - Configure Nginx with SSL certificates
-   - Update Slack app URLs to use HTTPS
+- Configure Nginx with SSL certificates
+- Update Slack app URLs to use HTTPS
 
 4. **Monitor Services**:
-   - Set up logging for Django, Celery, and PostgreSQL
-   - Monitor Redis and database performance
+
+- Set up logging for Django, Celery, and PostgreSQL
+- Monitor Redis and database performance
 
 ## Troubleshooting
 

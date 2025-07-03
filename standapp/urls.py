@@ -18,9 +18,31 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
+@csrf_exempt
+def root_view(request):
+    """Simple API status endpoint for root URL"""
+    return JsonResponse({
+        'message': 'StandApp API is running',
+        'status': 'ok',
+        'endpoints': {
+            'admin': '/admin/',
+            'api_schema': '/api/schema/',
+            'api_docs_swagger': '/api/schema/swagger-ui/',
+            'api_docs_redoc': '/api/schema/redoc/',
+            'api_auth': '/api/auth/',
+            'api_teams': '/api/teams/',
+            'api_standups': '/api/standups/',
+            'api_slack': '/api/slack/'
+        }
+    })
+
 urlpatterns = [
+    path('', root_view, name='root'),
     path('admin/', admin.site.urls),
     # API endpoints
     path('api/auth/', include('authentication.urls')),
@@ -29,8 +51,8 @@ urlpatterns = [
     path('api/slack/', include('slack_integration.urls')),
     # API schema and documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 # Serve static files during development

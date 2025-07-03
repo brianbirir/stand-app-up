@@ -17,6 +17,7 @@ django-celery-beat = "*"
 python-dotenv = "*"
 pytz = "*"
 drf-spectacular = "*"
+drf-spectacular-sidecar = "*"
 
 [dev-packages]
 
