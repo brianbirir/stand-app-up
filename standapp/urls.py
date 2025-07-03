@@ -23,23 +23,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
-@csrf_exempt
+
 def root_view(request):
-    """Simple API status endpoint for root URL"""
-    return JsonResponse({
-        'message': 'StandApp API is running',
-        'status': 'ok',
-        'endpoints': {
-            'admin': '/admin/',
-            'api_schema': '/api/schema/',
-            'api_docs_swagger': '/api/schema/swagger-ui/',
-            'api_docs_redoc': '/api/schema/redoc/',
-            'api_auth': '/api/auth/',
-            'api_teams': '/api/teams/',
-            'api_standups': '/api/standups/',
-            'api_slack': '/api/slack/'
-        }
-    })
+    """Redirect root URL to /admin/"""
+    return redirect('/admin/')
 
 urlpatterns = [
     path('', root_view, name='root'),

@@ -46,14 +46,14 @@ services:
       - backend-network
       - frontend-network
     environment:
-      - DEBUG=1
+      - DEBUG=True
       - DB_NAME=standapp_db
       - DB_USER=standapp_user
       - DB_PASSWORD=standapp_password
       - DB_HOST=db
       - DB_PORT=5432
       - REDIS_URL=redis://redis:6379/0
-      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,backend,nginx
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,backend,nginx,localhost:8080
     depends_on:
       db:
         condition: service_healthy
